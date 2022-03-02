@@ -1,0 +1,18 @@
+export const ACTION_STRING = {
+    authLogin: "AUTH_LOGIN",
+    authSignUp: "AUTH_SIGNUP",
+    userProfile : "USER-PROFILE",
+    updateProfile:"UPDATE_PROFILE",
+    detailVehicle : "DETAIL-USER",
+    getPopular : "GET-POPULAR",
+    getVehicleType :"GET-VEHICLE-TYPE",
+    createVehicle : "CREATE-VEHICLE",
+    setReservation : "SET-RESERVATION",
+    setFilterVehicle : "SET-FILTER-VEHICLE",
+    createHistory : "CREATE-HISTORY",
+    detailHistory : "GET-HISTORY",
+    getallvehicle : "GET-ALL-VEHICLE",
+    pending: "_PENDING",
+    fulfilled: "_FULFILLED",
+    rejected: "_REJECTED",
+  };
