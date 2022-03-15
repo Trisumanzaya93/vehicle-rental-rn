@@ -12,6 +12,7 @@ export const ACTION_STRING = {
     createHistory : "CREATE-HISTORY",
     detailHistory : "GET-HISTORY",
     getallvehicle : "GET-ALL-VEHICLE",
+    authLogout:"AUTH_LOGOUT",
     pending: "_PENDING",
     fulfilled: "_FULFILLED",
     rejected: "_REJECTED",

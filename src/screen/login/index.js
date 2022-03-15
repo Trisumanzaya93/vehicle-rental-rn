@@ -6,6 +6,11 @@ import {
   ImageBackground,
   TextInput,
   TouchableOpacity,
+  KeyboardAvoidingView,
+  ScrollView,
+  Alert,
+  Modal,
+  Pressable,
 } from 'react-native';
 import React, {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
@@ -15,6 +20,7 @@ const {width, height} = Dimensions.get('window');
 
 const Login = () => {
   const dispatch = useDispatch();
+  const [modalVisible, setModalVisible] = useState(false);
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const navigation = useNavigation();
@@ -39,14 +45,14 @@ const Login = () => {
       .then(result => {
         console.log('ini ', result.value.data.data);
         // alert("succes")
-        navigation.navigate("Home")
+        navigation.navigate('Home');
       })
       .catch(err => {
-        alert("email atau password salah")
+        alert('email atau password salah');
       });
   };
   return (
-    <View>
+    <ScrollView>
       <View style={styles.container}>
         <ImageBackground
           source={require('../../assets/img1.png')}
@@ -56,40 +62,68 @@ const Login = () => {
             <Text style={styles.texttitle}>THE WORLD</Text>
           </View>
           <View style={{marginTop: 200}}>
-            <TextInput
-              id="text"
-              style={styles.inputText}
-              placeholder="Email"
-              placeholderTextColor="white"
-              onChangeText={handleEmail}
-            />
-            <TextInput
-              secureTextEntry
-              id="password"
-              style={styles.inputText}
-              placeholder="Password"
-              placeholderTextColor="white"
-              onChangeText={handlePassword}
-            />
-            <TouchableOpacity style={{marginLeft: 20, marginBottom: 20}}>
-              <Text style={styles.textForgot}>Forgot Password?</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.btnLogin} onPress={handleLogin}>
-              <Text style={styles.textLogin}>Login</Text>
-            </TouchableOpacity>
-            <View
-              style={{marginTop: 40, marginBottom: 20, alignItems: 'center'}}>
-              <Text style={styles.textForgot}>
-                don't have account?{' '}
-                <Text style={styles.textForgot} onPress={handlerSignup}>
-                  disini
+            <KeyboardAvoidingView>
+              <TextInput
+                id="text"
+                style={styles.inputText}
+                placeholder="Email"
+                placeholderTextColor="white"
+                onChangeText={handleEmail}
+              />
+              <TextInput
+                secureTextEntry
+                id="password"
+                style={styles.inputText}
+                placeholder="Password"
+                placeholderTextColor="white"
+                onChangeText={handlePassword}
+              />
+              <TouchableOpacity style={{marginLeft: 20, marginBottom: 20}}>
+                <Text style={styles.textForgot}>Forgot Password?</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.btnLogin} onPress={handleLogin}>
+                <Text style={styles.textLogin}>Login</Text>
+              </TouchableOpacity>
+              <View style={styles.centeredView}>
+                <Modal
+                  animationType="slide"
+                  transparent={true}
+                  visible={modalVisible}
+                  onRequestClose={() => {
+                    Alert.alert('Modal has been closed.');
+                    setModalVisible(!modalVisible);
+                  }}>
+                  <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
+                      <Text style={styles.modalText}>Hello World!</Text>
+                      <Pressable
+                        style={[styles.button, styles.buttonClose]}
+                        onPress={() => setModalVisible(!modalVisible)}>
+                        <Text style={styles.textStyle}>Hide Modal</Text>
+                      </Pressable>
+                    </View>
+                  </View>
+                </Modal>
+                <Pressable
+                  style={[styles.button, styles.buttonOpen]}
+                  onPress={() => setModalVisible(true)}>
+                  <Text style={styles.textStyle}>Show Modal</Text>
+                </Pressable>
+              </View>
+              <View
+                style={{marginTop: 40, marginBottom: 20, alignItems: 'center'}}>
+                <Text style={styles.textForgot}>
+                  don't have account?
+                  <Text style={styles.textForgot} onPress={handlerSignup}>
+                    Sign Up Now
+                  </Text>
                 </Text>
-              </Text>
-            </View>
+              </View>
+            </KeyboardAvoidingView>
           </View>
         </ImageBackground>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -121,6 +155,7 @@ const styles = StyleSheet.create({
   },
   textForgot: {
     color: '#fff',
+    marginLeft: 5,
   },
   btnLogin: {
     marginLeft: 20,
@@ -136,6 +171,48 @@ const styles = StyleSheet.create({
     color: '#000',
     fontSize: 20,
     fontWeight: 'bold',
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#000',
+    opacity: 0.7,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonOpen: {
+    backgroundColor: '#F194FF',
+  },
+  buttonClose: {
+    backgroundColor: '#2196F3',
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
   },
 });
 

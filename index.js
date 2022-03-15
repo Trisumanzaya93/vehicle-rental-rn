@@ -7,6 +7,32 @@ import {name as appName} from './app.json';
 import {NavigationContainer} from '@react-navigation/native';
 import React from 'react';
 import {store, persistor} from './src/redux/store';
+import PushNotification from "react-native-push-notification"
+
+// FirebaseApp.initializeApp();
+
+PushNotification.configure({
+  // (optional) Called when Token is generated (iOS and Android)
+  onRegister: function (token) {
+    console.log("TOKEN:", token);
+  },
+  onNotification: function (notification) {
+    console.log("NOTIFICATION:", notification);
+  },
+  onAction: function (notification) {
+    console.log("ACTION:", notification.action);
+    console.log("NOTIFICATION:", notification);
+
+    // process the action
+  },
+  popInitialNotification: true,
+  requestPermissions: false,
+})
+
+PushNotification.createChannel({
+  channelId:"123",
+  channelName:"primary-notification"
+}, created=>console.log(`create channel returned "${created}"`))
 
 
 const AppWithNavAndRedux = () => (

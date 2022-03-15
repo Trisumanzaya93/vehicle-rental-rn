@@ -1,5 +1,5 @@
 import { ACTION_STRING } from "./actionString";
-import { login, signUp } from "../../utils/auth";
+import { login, logout, signUp } from "../../utils/auth";
 
 export const loginAction = (body) => {
   return {
@@ -11,5 +11,12 @@ export const signUpAction = (body) => {
   return {
     type: ACTION_STRING.authSignUp,
     payload: signUp(body),
+  };
+};
+
+export const LogoutAction = (token) => {
+  return {
+    type: ACTION_STRING.authLogout,
+    payload: logout(token),
   };
 };

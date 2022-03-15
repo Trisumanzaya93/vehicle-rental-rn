@@ -17,3 +17,16 @@ export const getProfile = (param) => {
         }
       });
   };
+
+  export const updateImage =(token,body)=>{
+    const URL = process.env.HEROKU + "/users/";
+    fetch(URL, {
+      method: 'PATCH',
+      headers: {
+        // Accept: 'application/json',
+        'Content-Type': 'multipart/form-data',
+        'x-access-token': token,
+      },
+      body
+    })
+  }

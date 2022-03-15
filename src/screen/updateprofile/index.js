@@ -6,6 +6,7 @@ import {
   TextInput,
   ScrollView,
   Button,
+  ToastAndroid
 } from 'react-native';
 import React, {useState} from 'react';
 import DatePicker from 'react-native-date-picker';
@@ -13,7 +14,12 @@ import dayjs from 'dayjs';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {useDispatch, useSelector} from 'react-redux';
 // import { updateProfile } from '../../utils/user';
-import {getProfileAction, updateProfileAction} from '../../redux/action/user';
+import {
+  getProfileAction,
+  updateImageAction,
+  updateProfileAction,
+} from '../../redux/action/user';
+import {updateImage} from '../../utils/user';
 
 const Updateprofile = () => {
   const dispatch = useDispatch();
@@ -53,15 +59,40 @@ const Updateprofile = () => {
     setAddress(e);
   };
 
+  const handlerImageSend = () => {
+    const token = allState.auth.userData.token;
+
+    // const URL = process.env.HEROKU + "/users/";
+    const body = new FormData();
+    body.append('image', {
+      uri: image.uri,
+      type: image.type,
+      name: image.fileName,
+    });
+    console.log(body);
+    const URL = process.env.HEROKU + '/users/';
+    fetch(URL, {
+      method: 'PATCH',
+      headers: {
+        // Accept: 'application/json',
+        'Content-Type': 'multipart/form-data',
+        'x-access-token': token,
+      },
+      body,
+    })
+      .then(res => console.log(res))
+      .catch(err => console.log(err));
+  };
+
   const handlerUpdate = () => {
     const token = allState.auth.userData.token;
-    const body ={
+    const body = {
       displayname,
       email,
       phone,
-      birthday:dayjs(date).format('YYYY-MM-DD'),
-      address
-    }
+      birthday: dayjs(date).format('YYYY-MM-DD'),
+      address,
+    };
     // const body = new FormData();
     // body.append("username", this.state.username);
     // image.mimetype = image.type;
@@ -81,21 +112,40 @@ const Updateprofile = () => {
     // }catch(err){
     //   console.error(err)
     // };
-    console.log("body dispatch",body);
+    console.log('body dispatch', body);
     dispatch(updateProfileAction(token, body))
-    .then((result) => {
-      console.log("ini ", result.value.data.data);
-      const data = result.value.data.data;
-      alert("success")
-      dispatch(getProfileAction({
-        headers: {
-          "x-access-token": token,
-        },
-      }))
-     
-    })
-    .catch((err) => alert("password gagal"));
-  
+      .then(result => {
+        console.log('ini ', result.value.data.data);
+        const data = result.value.data.data;
+        const body = new FormData();
+        body.append('image', {
+          uri: image.uri,
+          type: image.type,
+          name: image.fileName,
+        });
+        console.log(body);
+        const URL = process.env.HEROKU + '/users/';
+        fetch(URL, {
+          method: 'PATCH',
+          headers: {
+            // Accept: 'application/json',
+            'Content-Type': 'multipart/form-data',
+            'x-access-token': token,
+          },
+          body,
+        }).then(res => {
+          ToastAndroid.show("update profile Success", ToastAndroid.SHORT)
+          dispatch(
+            getProfileAction({
+              headers: {
+                'x-access-token': token,
+              },
+            }),
+          );
+        });
+      })
+      // .catch(err => console.log(err));
+      .catch(err => alert('password gagal'));
 
     //   console.log('ini ', response.value.data.data);
     //   // alert("succes")
@@ -140,16 +190,16 @@ const Updateprofile = () => {
     const option = {
       mediaType: 'photo',
       quality: 1,
-      includeBase64: true
+      includeBase64: true,
     };
-    launchImageLibrary(option, res => {
+    launchCamera(option, res => {
       if (res.didCancel) {
         console.log('cencel image');
       } else if (res.errorCode) {
         console.log(res.errorMessage);
       } else {
         const data = res.assets[0];
-        console.log('res',res);
+        console.log('res', res);
         setimageprev(data.uri);
         setimage(data);
         setBinaryImage(data.base64);
@@ -206,6 +256,9 @@ const Updateprofile = () => {
               alignItems: 'center',
             }}>
             <Image source={require('../../assets/icon5.png')} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handlerImageSend}>
+            <Text>sasasa</Text>
           </TouchableOpacity>
         </View>
         <View
@@ -310,11 +363,20 @@ const Updateprofile = () => {
               marginBottom: 20,
             }}
           />
-          <View style={{width: "80%",justifyContent:"center",alignItems:"center"}}>
+          <Text
+            style={{
+              fontSize: 18,
+              fontWeight: 'bold',
+              color: '#B8B8B8',
+              marginBottom: 10,
+            }}>
+            Date Of Birth :
+          </Text>
+          <View style={{width: 200, marginBottom: 10}}>
             <Button
               title={`${dayjs(date).format('YYYY-MM-DD')}`}
               tipe=""
-              color={'#DEDEDE'}
+              color="#808080"
               onPress={() => setOpen(true)}
             />
             <DatePicker
@@ -323,6 +385,11 @@ const Updateprofile = () => {
               textColor="blue"
               androidPickerMode="spinner"
               open={open}
+              costumStyles={{
+                title: {
+                  textColor: '#000',
+                },
+              }}
               date={date}
               onConfirm={date => {
                 setOpen(false);

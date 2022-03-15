@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   ScrollView,
+  ToastAndroid
 } from 'react-native';
 import React, {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
@@ -42,7 +43,7 @@ const Signup = () => {
     dispatch(signUpAction(body))
       .then(result => {
         // console.log('ini ', result.value.data.data);
-        alert("create account success")
+        ToastAndroid.show("update profile Success", ToastAndroid.SHORT)
       })
       .catch(err => {
         console.log(err)

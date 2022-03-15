@@ -11,7 +11,7 @@ const Payment2 = () => {
     const allState = useSelector(state => state);
     const reservation = allState.setReservation.reservation
     const vehicle = allState.detailVehicle.datavehicle
-    console.log(reservation);
+    console.log(vehicle.photo);
     const handlerStep2=()=>{
         const bookingCode = `VEHICLE-RENT-${dayjs().format("YYm-mss-DD")}`;
         const paymentCode = `${dayjs().format("YYm-YYss-DD-MM")}`;
@@ -24,7 +24,7 @@ const Payment2 = () => {
     }
   return (
       <ScrollView>
-    <View style={{backgroundColor:"white",height:"100%"}}>
+    <View style={{backgroundColor:"#fff",height:"100%"}}>
        <View
           style={{
             display: 'flex',
@@ -41,17 +41,17 @@ const Payment2 = () => {
             style={{
               fontSize: 28,
               fontWeight: 'bold',
-              color: 'black',
+              color: '#000000',
               marginLeft: 20,
             }}>
-            Payement
+            Payment
           </Text>
         </View>
         <View style={{width:"100%",justifyContent:"center",alignItems:"center"}}>
             <Image source={require("../../assets/icon7.png")} style={{marginLeft:-70,width:370, height:200}}/>
         </View>
         <View style={{width:"100%",justifyContent:"center",alignItems:"center"}}>
-            <Image source={require("../../assets/img5.png")} style={{height:201,borderRadius:20}}/>
+            <Image source={require("../../assets/icon13.jpg")} style={{height:201,borderRadius:20}}/>
         </View>
         <View style={{width:"100%",justifyContent:"center",paddingLeft:"5%", marginTop:20}}>
             <Text style={{fontSize:17, fontWeight:'500',marginBottom:10}}>{reservation.quantityTotal} Vehicle</Text>
@@ -61,7 +61,7 @@ const Payment2 = () => {
         </View>
         <View style={{width:"100%",justifyContent:"center",paddingLeft:"5%", marginTop:20,paddingRight:"5%"}}>
             <View style={{display:"flex",justifyContent:"space-between",flexDirection:"row"}}>
-                <Text style={{fontSize:26,fontWeight:"bold",color:"black    "}}>Rp. {reservation.totalPrice}</Text>
+                <Text style={{fontSize:26,fontWeight:"bold",color:"#000"}}>Rp. {reservation.totalPrice}</Text>
                 <Image source={require("../../assets/icon8.png")}/>
             </View>
         </View>

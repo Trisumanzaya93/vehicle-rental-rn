@@ -1,5 +1,5 @@
 import { ACTION_STRING } from "./actionString";
-import { getProfile,updateProfile } from "../../utils/user";
+import { getProfile,updateImage,updateProfile } from "../../utils/user";
 
 export const getProfileAction = (param) => {
 //   console.log('param', updateProfile(param));
@@ -16,3 +16,11 @@ export const getProfileAction = (param) => {
           payload: updateProfile(token, body),
         };
       };
+
+      export const updateImageAction = (token, body) => {
+        console.log('param', token, body, updateImage);
+          return {
+            type: ACTION_STRING.updateProfile,
+            payload: updateImage(token, body),
+          };
+        };
