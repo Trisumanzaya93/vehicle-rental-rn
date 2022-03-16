@@ -1,5 +1,5 @@
 import { ACTION_STRING } from "./actionString";
-import { detailVehicle, getPopular } from "../../utils/vehicle";
+import { detailVehicle, getAllVehicle, getPopular, getVehicleType } from "../../utils/vehicle";
 
 export const getPopularAction = (body) => {
     return {
@@ -17,5 +17,17 @@ export const getPopularAction = (body) => {
     return {
       type: ACTION_STRING.setReservation,
       payload: body,
+    };
+  };
+  export const getVehicleTypeAction = (body) => {
+    return {
+      type: ACTION_STRING.getVehicleType,
+      payload: getVehicleType(body),
+    };
+  };
+  export const getAllVehicleAction = (body) => {
+    return {
+      type: ACTION_STRING.getallvehicle,
+      payload: getAllVehicle(body),
     };
   };

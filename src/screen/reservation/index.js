@@ -47,7 +47,7 @@ const Reservation = () => {
               color: 'black',
               marginLeft: 20,
             }}>
-            Payement
+            Payment
           </Text>
         </View>
         <View style={{width:"100%",justifyContent:"center",alignItems:"center"}}>

@@ -1,19 +1,30 @@
-import {View, Text, Image, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, Text, Image, StyleSheet, TouchableOpacity, Alert,
+  Modal,
+  Pressable,} from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 import { getProfileAction } from '../../redux/action/user';
+import { LogoutAction } from '../../redux/action/auth';
 
 const Profile = () => {
   const dispatch= useDispatch()
     const navigation= useNavigation()
+    
+  const [modalVisible, setModalVisible] = useState(false);
     const allState = useSelector(state => state.getProfile.userinfo);
     const token = useSelector(state => state.auth.userData.token);
     // const [token,setToken]= useState("")
     console.log("token",token);
     // const [profile,setProfile]=useState(allState.getProfile.userinfo)
     console.log("okee",allState)
-
+    const handlerLogout = ()=>{
+      dispatch(LogoutAction(token))
+      .then(res=>{
+        navigation.navigate("Login")
+      })
+      .catch(err=>console.log(err))
+    }
     const getProfil = async() =>{
       // const token =token
       // setToken(token)
@@ -64,7 +75,31 @@ const Profile = () => {
               <Image source={require("../../assets/icon2.png")} style={{width:8,height:10}}/>
           </TouchableOpacity>
           </View>
-          <TouchableOpacity style={styles.btnlogout}>
+          <View>
+                <Modal
+                  animationType="slide"
+                  transparent={true}
+                  visible={modalVisible}
+                  onRequestClose={() => {
+                    Alert.alert('Modal has been closed.');
+                    setModalVisible(!modalVisible);
+                  }}>
+                  <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
+                      <Text style={styles.modalText}>apakah anda yakin ingin log out!</Text>
+                      <View style={{ width:"50%",display:"flex",flexDirection:"row", justifyContent:"space-between",alignItems:"center"}}>
+                      <Pressable onPress={handlerLogout} style={[styles.button, styles.buttonClose]}><Text style={styles.textStyle}>yes</Text></Pressable>
+                      <Pressable
+                        style={[styles.button, styles.buttonClose]}
+                        onPress={() => setModalVisible(!modalVisible)}>
+                        <Text style={styles.textStyle}>no</Text>
+                      </Pressable>
+                      </View>
+                    </View>
+                  </View>
+                </Modal>
+              </View>
+          <TouchableOpacity style={styles.btnlogout} onPress={() => setModalVisible(true)}>
               <View style={{width:"80%", justifyContent:"center",alignItems:"center"}}>
               <Text style={{fontSize:24,fontWeight:"bold"}}>Log Out</Text>
               </View>
@@ -118,7 +153,51 @@ const styles = StyleSheet.create({
       borderRadius:10,
       display:"flex",
       flexDirection:"row",
-  }
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor:"#000",
+    opacity:0.7
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  button: {
+    width:150,
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+    marginLeft:10
+  },
+  buttonOpen: {
+    backgroundColor: '#F194FF',
+  },
+  buttonClose: {
+    backgroundColor: '#FFCD61',
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+  },
 });
 
 export default Profile;
