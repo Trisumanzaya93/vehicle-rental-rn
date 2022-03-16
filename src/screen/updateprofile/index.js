@@ -257,9 +257,6 @@ const Updateprofile = () => {
             }}>
             <Image source={require('../../assets/icon5.png')} />
           </TouchableOpacity>
-          <TouchableOpacity onPress={handlerImageSend}>
-            <Text>sasasa</Text>
-          </TouchableOpacity>
         </View>
         <View
           style={{
