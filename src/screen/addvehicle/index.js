@@ -19,6 +19,7 @@ const Addvehicle = () => {
   const [imageprev, setimageprev] = useState(
     'http://cdn.onlinewebfonts.com/svg/img_211436.png',
   );
+  const [isErr,setIsErr]=useState(false)
   const [image, setimage] = useState(null);
   const [counter, setCounter] = useState(1);
   const [vehicleName, setVehicleName] = useState('');
@@ -55,6 +56,7 @@ const Addvehicle = () => {
   };
 
   const openCamera = () => {
+    setIsErr(false)
     const option = {
       mediaType: 'photo',
       quality: 1,
@@ -71,7 +73,10 @@ const Addvehicle = () => {
         setimageprev(data.uri);
         setimage(data);
         // setBinaryImage(data.base64);
-        console.log(data);
+        if(data.fileSize>2000000){
+          setIsErr(true)
+        }
+        console.log("filesize",data.fileSize);
       }
     });
   };
@@ -190,6 +195,7 @@ const Addvehicle = () => {
             </Text>
           </TouchableOpacity>
         </View>
+        {isErr?(<><View style={{width: '90%', marginLeft: '5%', marginTop: 40, alignItems:"center"}}><Text style={{fontSize:17,fontWeight:"bold",color:"#ff0000"}}>image is over size</Text></View></>):null}
         <View style={{width: '90%', marginLeft: '5%', marginTop: 40}}>
           <View
             style={{

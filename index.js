@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 import Router from './src/Router';
-import {AppRegistry, Text, View} from 'react-native';
+import {AppRegistry, Text, View,ActivityIndicator} from 'react-native';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import {name as appName} from './app.json';
@@ -39,8 +39,10 @@ const AppWithNavAndRedux = () => (
     <Provider store={store}>
       <PersistGate
         loading={
-          <View>
-            <Text>Fetching</Text>
+          <View style={{width:"100%",height:"100%",justifyContent:"center",alignItems:"center",backgroundColor:"#FFCD61"}}>
+            <Text style={{fontSize:40,fontWeight:"bold"}}>welcome to</Text>
+            <Text style={{fontSize:40,fontWeight:"bold"}}>Vehicle Rental</Text>
+            <ActivityIndicator style={{marginTop:40}} size="large" color="#000"/>
           </View>
         }
         persistor={persistor}>

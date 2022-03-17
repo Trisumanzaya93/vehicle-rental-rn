@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Button,
+  ActivityIndicator
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import DropDownPicker from 'react-native-dropdown-picker';
@@ -21,6 +22,7 @@ const Detailvehicle = ({route}) => {
   const navigation= useNavigation()
   const dispatch = useDispatch();
   const [detailVehicle, setdetailvehicle] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
   const [counter, setCounter] = useState(1);
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
@@ -47,12 +49,13 @@ const Detailvehicle = ({route}) => {
   };
 
   const getDetailVehicle = () => {
+    setIsLoading(true)
     const id = route.params.id;
     dispatch(getDetailVehicleAction(id))
       .then(result => {
-        console.log('ini ', result.value.data.data);
         const data = result.value.data.data[0];
         setdetailvehicle(data);
+        setIsLoading(false)
       })
       .catch(err => console.log(err));
   };
@@ -103,6 +106,11 @@ const Detailvehicle = ({route}) => {
   return (
     <ScrollView>
       <View style={{backgroundColor: '#FFF'}}>
+      {isLoading?(<>
+      <View style={{width:"100%",height:900,alignItems:"center",justifyContent:"center", backgroundColor:"#fff"}}>
+      <ActivityIndicator size="large" color="#FFCD61"/>
+      </View>
+      </>):(<>
         <Image
           source={{
             uri: `${detailVehicle.photo}`,
@@ -218,6 +226,8 @@ const Detailvehicle = ({route}) => {
             <Text style={styles.textreservation}>Reservation</Text>
           </TouchableOpacity>
         </View>
+      </>)}
+        
       </View>
     </ScrollView>
   );

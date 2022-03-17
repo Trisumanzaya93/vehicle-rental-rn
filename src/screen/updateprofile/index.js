@@ -203,7 +203,6 @@ const Updateprofile = () => {
         setimageprev(data.uri);
         setimage(data);
         setBinaryImage(data.base64);
-        console.log(data);
       }
     });
   };

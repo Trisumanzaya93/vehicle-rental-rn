@@ -1,5 +1,5 @@
 import { ACTION_STRING } from "./actionString";
-import { login, logout, signUp } from "../../utils/auth";
+import { forgotPassword, login, logout, resetPassword, signUp } from "../../utils/auth";
 
 export const loginAction = (body) => {
   return {
@@ -18,5 +18,18 @@ export const LogoutAction = (token) => {
   return {
     type: ACTION_STRING.authLogout,
     payload: logout(token),
+  };
+};
+export const forgotPasswordAction = (body) => {
+  return {
+    type: ACTION_STRING.forgotPassword,
+    payload: forgotPassword(body),
+  };
+};
+
+export const resetPasswordAction = (body) => {
+  return {
+    type: ACTION_STRING.resetPassword,
+    payload: resetPassword(body),
   };
 };

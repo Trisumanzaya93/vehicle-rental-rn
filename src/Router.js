@@ -17,6 +17,8 @@ import Chatdetail from './screen/chatdetail';
 import Vehicleall from './screen/vehicleall';
 import Addvehicle from './screen/addvehicle';
 import Updatevehicle from './screen/updatevehicle';
+import Forgotpassword from './screen/forgotpassword';
+import Resetpassword from './screen/resetpassword';
 const iconHome = require('./assets/home.png');
 const iconHistory = require('./assets/history.png');
 const iconProfile = require('./assets/profile.png');
@@ -31,6 +33,8 @@ const Router = () => (
     
     <Stack.Screen name="Home" component={TabsNav} />
     <Stack.Screen name="Signup" component={Signup} />
+    <Stack.Screen name="Forgotpassword" component={Forgotpassword} />
+    <Stack.Screen name="ResetPassword" component={Resetpassword} />
   </Stack.Navigator>
 );
 const HomeTab = () => (

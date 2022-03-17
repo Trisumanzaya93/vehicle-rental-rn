@@ -1,4 +1,4 @@
-import {View, Text,Image,TouchableOpacity,ScrollView,TextInput} from 'react-native';
+import {View, Text,Image,TouchableOpacity,ScrollView,TextInput,ActivityIndicator} from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getDetailHistoryAction } from '../../redux/action/history';
@@ -8,18 +8,19 @@ const History = () => {
   const dispatch= useDispatch()
   const token = useSelector(state => state.auth.userData.token);
   const [detailhistory, setdetailhistory] = useState([]);
-  console.log(detailhistory);
+  const [isLoading,setIsLoading]= useState(false)
   const [parameter, setParameter] = useState({
     search: '',
     sortBy: '',
     sort: '',
   });
   const getHistory = () => {
+    setIsLoading(true)
     dispatch(getDetailHistoryAction(parameter,token))
       .then((result) => {
         const data = result.value.data.data;
         setdetailhistory(data);
-
+        setIsLoading(false)
       })
       .catch((err) => console.log(err));
   };
@@ -29,7 +30,7 @@ const History = () => {
     return () => {};
   }, []);
   return (
-    <View style={{backgroundColor: '#fff'}}>
+    <View style={{backgroundColor: '#fff',height:"100%"}}>
       <View
         style={{justifyContent: 'center', alignItems: 'center', marginTop: 40}}>
         <Text style={{fontSize: 28, fontWeight: 'bold', color: '#000'}}>
@@ -56,9 +57,19 @@ const History = () => {
           <Text style={{fontSize:19, color:"#C4C4C4"}}>delete</Text>
         </View>
       </View>
+      {isLoading?(<>
+      <View style={{width:"100%",alignItems:"center"}}>
+      <ActivityIndicator size="large" color="#FFCD61"/>
+      </View>
+      </>):(<>
         <ScrollView>
       <View style={{paddingBottom:100}}>
-      {detailhistory.length > 0 &&
+      {detailhistory.length===0 ? (<>
+      <View style={{width:"100%", alignItems:"center",marginTop:20}}>
+        <Text style={{fontSize:30,fontWeight:"bold"}}>No Order Yet</Text>
+      </View>
+      </>):(<>
+        {detailhistory.length > 0 &&
         detailhistory.map((item, idx) => {
           if(item.photo === null){
             item.photo = "https://png.pngtree.com/element_our/sm/20180516/sm_5afbf1d28feb1.jpg"
@@ -83,8 +94,12 @@ const History = () => {
       </View>
           )
         })}
+      </>)}
+      
       </View>
         </ScrollView>
+      </>)}
+        
     </View>
   );
 };

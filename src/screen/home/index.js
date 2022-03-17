@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   ScrollView,
   FlatList,
+  ActivityIndicator
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
@@ -21,28 +22,36 @@ const Home = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const allState = useSelector(state => state);
+  const role = useSelector(state => state.auth.userData.user.role);
   const [popular, setPopular] = useState([]);
-  const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(null);
-  const [items, setItems] = useState([
-    {label: 'Apple', value: 'apple'},
-    {label: 'Banana', value: 'banana'},
-  ]);
+  const [location, setLocation] = useState("");
+  const [isLoading,setIsLoading]= useState(false)
+  const [isLoading1,setIsLoading1]= useState(false)
+  const [isLoading2,setIsLoading2]= useState(false)
+  const [isLoading3,setIsLoading3]= useState(false)
   const [car, setCar] = useState([]);
   const [motorBike, setMotorBike] = useState([]);
   const [bycycle, setBycycle] = useState([]);
   
-  
+  const handlerLocation =e=>{
+    setLocation(e)
+  }
 
   const getHistoryPopular = () => {
+    setIsLoading(true)
     dispatch(getPopularAction())
       .then(result => {
         const data = result.value.data.data;
         // setdetailhistory(data);
         setPopular(data);
+        setIsLoading(false)
         // console.log('parameter',data);
       })
       .catch(err => console.log(err));
+  };
+
+  const handlerViewAll = () => {
+    navigation.navigate('Allvehicle', {location: location});
   };
 
   const handlerDetailVehicle = id => {
@@ -51,36 +60,39 @@ const Home = () => {
   };
 
   const getVehicleCar = () => {
+    setIsLoading1(true)
     dispatch(getVehicleTypeAction("car"))
       .then((result) => {
         const data = result.value.data.data;
         // setdetailhistory(data);
         setCar(data);
-        console.log('ini apa sihhhhh',data);
+        setIsLoading1(false)
 
       })
       .catch((err) => console.log(err));
     };
 
     const getVehicleMotorBike = () => {
+      setIsLoading2(true)
       dispatch(getVehicleTypeAction("motorcycle"))
         .then((result) => {
           const data = result.value.data.data;
           // setdetailhistory(data);
           setMotorBike(data);
-          console.log('hayooo apa inii',data);
+          setIsLoading2(false)
   
         })
         .catch((err) => console.log(err));
       };
 
       const getVehicleBycicle = () => {
+        setIsLoading3(true)
         dispatch(getVehicleTypeAction("bicycle"))
           .then((result) => {
             const data = result.value.data.data;
             // setdetailhistory(data);
             setBycycle(data);
-            console.log('data',data);
+            setIsLoading3(false)
     
           })
           .catch((err) => console.log(err));
@@ -112,43 +124,15 @@ const Home = () => {
             style={styles.inputText}
             placeholder="location"
             placeholderTextColor="#fff"
-            // onChangeText={handleEmail}
-          />
-          <DropDownPicker
-            style={styles.dropdown}
-            placeholder="Car"
-            open={open}
-            value={value}
-            items={items}
-            setOpen={setOpen}
-            setValue={setValue}
-            setItems={setItems}
+            onChangeText={handlerLocation}
           />
         </View>
-        <View style={styles.wrapinput}>
-          <TextInput
-            id="date"
-            style={styles.inputText}
-            placeholder="Selected Date"
-            placeholderTextColor="white"
-            // onChangeText={handleEmail}
-          />
-          <DropDownPicker
-            style={styles.dropdown}
-            placeholder="Car"
-            open={open}
-            value={value}
-            items={items}
-            setOpen={setOpen}
-            setValue={setValue}
-            setItems={setItems}
-          />
-        </View>
-        <TouchableOpacity style={styles.btnsearch}>
+        <TouchableOpacity style={styles.btnsearch} onPress={handlerViewAll}>
           <Text style={styles.searchtext}>Search Vehicle</Text>
         </TouchableOpacity>
       </View>
-      <View style={{alignItems: 'center', margin: 40}}>
+      {role==="admin"?(<>
+        <View style={{alignItems: 'center', margin: 40}}>
         <TouchableOpacity
           onPress={() => navigation.navigate('Vehicleadd')}
           style={{
@@ -164,13 +148,17 @@ const Home = () => {
           </Text>
         </TouchableOpacity>
       </View>
+      </>):null}
+      
       <View style={styles.wraprecomended}>
         <Text style={styles.textrecomended}>Recomended</Text>
         <TouchableOpacity onPress={() => navigation.navigate('Allvehicle')}>
           <Text style={styles.textviewmore}>View More</Text>
         </TouchableOpacity>
       </View>
-      <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+      {!isLoading? (
+        <>
+        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
         <View style={styles.wrapimgvehicle}>
           {popular.length > 0 &&
             popular.map((item, idx) => {
@@ -190,13 +178,22 @@ const Home = () => {
             })}
         </View>
       </ScrollView>
+        </>
+      ):(
+      <>
+      <View style={{height:150,justifyContent:"center",alignItems:"center"}}>
+        <ActivityIndicator size="large" color="#FFCD61"/>
+      </View>
+      </>)}
+      
       <View style={styles.wraprecomended}>
         <Text style={styles.textrecomended}>Car</Text>
-        <TouchableOpacity onPress={() => navigation.navigate('Allvehicle')}>
+        <TouchableOpacity onPress={() => navigation.navigate('Allvehicle',{type:"car"})}>
           <Text style={styles.textviewmore}>View More</Text>
         </TouchableOpacity>
       </View>
-      <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+      {!isLoading1?(<>
+        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
         <View style={styles.wrapimgvehicle}>
           {car.length > 0 &&
             car.map((item, idx) => {
@@ -216,13 +213,20 @@ const Home = () => {
             })}
         </View>
       </ScrollView>
+      </>):(<>
+        <View style={{height:150,justifyContent:"center",alignItems:"center"}}>
+        <ActivityIndicator size="large" color="#FFCD61"/>
+      </View>
+      </>)}
+      
       <View style={styles.wraprecomended}>
         <Text style={styles.textrecomended}>bike</Text>
-        <TouchableOpacity onPress={() => navigation.navigate('Allvehicle')}>
+        <TouchableOpacity onPress={() => navigation.navigate('Allvehicle',{type:"bicycle"})}>
           <Text style={styles.textviewmore}>View More</Text>
         </TouchableOpacity>
       </View>
-      <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+      {!isLoading2?(<>
+        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
         <View style={styles.wrapimgvehicle}>
           {bycycle.length > 0 &&
             bycycle.map((item, idx) => {
@@ -242,13 +246,20 @@ const Home = () => {
             })}
         </View>
       </ScrollView>
+      </>):(<>
+        <View style={{height:150,justifyContent:"center",alignItems:"center"}}>
+        <ActivityIndicator size="large" color="#FFCD61"/>
+      </View>
+      </>)}
+      
       <View style={styles.wraprecomended}>
         <Text style={styles.textrecomended}>Motorcycle</Text>
-        <TouchableOpacity onPress={() => navigation.navigate('Allvehicle')}>
+        <TouchableOpacity onPress={() => navigation.navigate('Allvehicle',{type:"motorcycle"})}>
           <Text style={styles.textviewmore}>View More</Text>
         </TouchableOpacity>
       </View>
-      <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+      {!isLoading3?(<>
+        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
         <View style={styles.wrapimgvehicle}>
           {motorBike.length > 0 &&
             motorBike.map((item, idx) => {
@@ -268,6 +279,12 @@ const Home = () => {
             })}
         </View>
       </ScrollView>
+      </>):(<>
+        <View style={{height:150,justifyContent:"center",alignItems:"center"}}>
+        <ActivityIndicator size="large" color="#FFCD61"/>
+      </View>
+      </>)}
+      
     </ScrollView>
   );
 };
@@ -278,7 +295,7 @@ const styles = StyleSheet.create({
   },
   wrapsearch: {
     width: '100%',
-    height: 250,
+    height: 175,
     backgroundColor: '#393939',
     borderTopEndRadius: 50,
     borderTopLeftRadius: 50,
@@ -296,7 +313,7 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     borderRadius: 10,
     height: 50,
-    width: 180,
+    width: "85%",
     color: '#fff',
     fontSize: 20,
   },

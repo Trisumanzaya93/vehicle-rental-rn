@@ -5,6 +5,8 @@ export const ACTION_STRING = {
     updateProfile:"UPDATE_PROFILE",
     detailVehicle : "DETAIL-USER",
     getPopular : "GET-POPULAR",
+    forgotPassword:"FORGOT-PASSWORD",
+    resetPassword:"RESET-PASSWORD",
     getVehicleType :"GET-VEHICLE-TYPE",
     createVehicle : "CREATE-VEHICLE",
     setReservation : "SET-RESERVATION",

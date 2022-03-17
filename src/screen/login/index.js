@@ -16,18 +16,20 @@ import React, {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {loginAction} from '../../redux/action/auth';
 import {useDispatch} from 'react-redux';
-const {width, height} = Dimensions.get('window');
+const {width, height} = Dimensions.get('screen');
 
 const Login = () => {
   const dispatch = useDispatch();
   const [modalVisible, setModalVisible] = useState(false);
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
+  const [isErr,setIsErr]=useState(false)
   const navigation = useNavigation();
   const handleEmail = e => {
     setEmail(e);
   };
   const handlePassword = e => {
+    setIsErr(false)
     setPassword(e);
   };
   const handlerSignup = () => {
@@ -48,7 +50,7 @@ const Login = () => {
         navigation.navigate('Home');
       })
       .catch(err => {
-        alert('email atau password salah');
+        setIsErr(true)
       });
   };
   return (
@@ -63,6 +65,7 @@ const Login = () => {
           </View>
           <View style={{marginTop: 200}}>
             <KeyboardAvoidingView>
+            {isErr?(<><View style={{marginLeft:20,marginBottom:10 ,width:"90%",alignItems:"center",opacity:0.7}}><View style={{backgroundColor:"rgba(218, 218, 218, 0.58)"}}><Text style={{textShadowColor:"#fff",fontSize:17,fontWeight:"bold",shadowColor:"#fff",color:"#ff0000"}}>email atau password salah</Text></View></View></>):null}
               <TextInput
                 id="text"
                 style={styles.inputText}
@@ -78,7 +81,8 @@ const Login = () => {
                 placeholderTextColor="white"
                 onChangeText={handlePassword}
               />
-              <TouchableOpacity style={{marginLeft: 20, marginBottom: 20}}>
+              
+              <TouchableOpacity style={{marginLeft: 20, marginBottom: 20}} onPress={()=>navigation.navigate("Forgotpassword")}>
                 <Text style={styles.textForgot}>Forgot Password?</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.btnLogin} onPress={handleLogin}>
@@ -105,6 +109,7 @@ const styles = StyleSheet.create({
   container: {
     width: width,
     flexDirection: 'row',
+    height:height
   },
   background: {
     width: '100%',

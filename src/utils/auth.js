@@ -17,3 +17,14 @@ export const logout = (token) => {
     "x-access-token": token,
   }});
 };
+
+export const forgotPassword = (body) => {
+  const URL = process.env.HEROKU + "/users/edit/forgotpassword";
+    console.log('hehe', URL);
+  return axios.post(URL, body);
+};
+export const resetPassword = (body) => {
+  const URL = process.env.HEROKU + "/users/edit/resetpassword";
+    console.log('hehe', URL);
+  return axios.patch(URL, body);
+};
